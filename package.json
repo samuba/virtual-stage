@@ -1,32 +1,18 @@
 {
-  "name": "virtual-stage",
-  "version": "0.1.0",
-  "private": true,
+  "name": "virtualoffice",
+  "version": "0.0.1",
+  "description": "Feel as your remote workers are right in your room without being to intrusive",
+  "main": "server.js",
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "start": "node server.js && yarn --cwd ./frontend serve"
   },
   "dependencies": {
-    "core-js": "^3.6.4",
-    "tailwindcss": "^1.2.0",
-    "vue": "^2.6.11",
-    "vue-class-component": "^7.2.2",
-    "vue-property-decorator": "^8.3.0",
-    "vue-router": "^3.1.5"
+    "body-parser": "^1.19.0",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
   },
-  "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^2.18.0",
-    "@typescript-eslint/parser": "^2.18.0",
-    "@vue/cli-plugin-babel": "~4.2.0",
-    "@vue/cli-plugin-eslint": "~4.2.0",
-    "@vue/cli-plugin-router": "~4.2.0",
-    "@vue/cli-plugin-typescript": "~4.2.0",
-    "@vue/cli-service": "~4.2.0",
-    "@vue/eslint-config-typescript": "^5.0.1",
-    "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^6.1.2",
-    "typescript": "~3.7.5",
-    "vue-template-compiler": "^2.6.11"
+  "engines": {
+    "node": "12.x"
   }
 }

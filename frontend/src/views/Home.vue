@@ -5,7 +5,6 @@
         Du bist dabei die virtuelle Veranstaltung <b>Citychurch Gottesdienst</b> zu betreten.
       </h1>
       
-
       <!-- enter username -->
       <div v-if="!usernameSet">
         <div class="mt-8 text-lg">Wie ist dein Name?</div>
@@ -60,6 +59,7 @@
 
             <button
               v-if="showCameraVideo"
+              @click="enterRoom"
               class="button mt-8"
             >
               <span>{{enterEventText}}</span>
@@ -73,15 +73,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import LoadingIcon from '../components/LoadingIcon.vue';
 
 @Component({components: {
   LoadingIcon
 }})
 export default class Home extends Vue {
-  @Prop() private msg!: string;
-
   showCameraVideo = false;
   enterEventText = "Veranstaltung betreten";
   username = localStorage.getItem('username');
@@ -115,6 +113,10 @@ export default class Home extends Vue {
     } else {
       alert("Your browser is too old. Please install Chrome or Firefox");
     }
+  }
+
+  enterRoom() {
+    this.$router.push({ name: "Room"})
   }
 }
 </script>
