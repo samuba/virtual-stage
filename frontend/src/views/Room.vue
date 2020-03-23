@@ -50,19 +50,22 @@
       </div>
     </div>
 
-    <div id="usersCamContainer" class="pt-1 pl-1"></div>
-    <video
-      autoplay
-      height="200"
-      preload="auto"
-      class="pic opacity-0 fixed"
-    ></video>
+    <div id="usersCamContainer" class="pt-1 pl-1">
+      <audience-member
+        v-for="user in users"
+        :key="user.name"
+        :name="user.name"
+        :image-data="user.imageData"
+      />
+    </div>
+    <video autoplay height="200" preload="auto" class="opacity-0 fixed" style="height: 200px;"></video>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import LoadingIcon from "../components/LoadingIcon.vue";
+import LoadingIcon from "@/components/LoadingIcon.vue";
+import AudienceMember from "@/components/AudienceMember.vue";
 
 interface Chat {
   createdAt: string;
@@ -70,7 +73,8 @@ interface Chat {
 
 @Component({
   components: {
-    LoadingIcon
+    LoadingIcon,
+    AudienceMember
   }
 })
 export default class Room extends Vue {
@@ -78,6 +82,7 @@ export default class Room extends Vue {
   username = "";
   currentMessage = "";
   chat: Chat[] = [] as any;
+  users: { imageData: string; name: string }[] = [] as any;
   showChat = true;
   lastMessageReadAt = "";
 
@@ -88,7 +93,9 @@ export default class Room extends Vue {
   }
 
   get serverBasePath() {
-    return window.location.hostname == "localhost" ? "http://localhost:8088" : "";
+    return window.location.hostname == "localhost"
+      ? "http://localhost:8088"
+      : "";
   }
 
   mounted() {
@@ -101,18 +108,26 @@ export default class Room extends Vue {
     setInterval(() => this.sendCurrentPic(), 5000);
     setInterval(() => this.updateRoom(), 3000);
   }
-  
+
   usersCamContainerElement() {
     return document.getElementById("usersCamContainer")!;
   }
 
   postMessage() {
     if (!this.currentMessage.trim()) return;
-    fetch(this.serverBasePath + "/rooms/" + this.room + "/" + this.username + "/chat", {
-      method: "put",
-      headers: { "Content-Type": "text/plain; charset=UTF-8" },
-      body: this.currentMessage
-    })
+    fetch(
+      this.serverBasePath +
+        "/rooms/" +
+        this.room +
+        "/" +
+        this.username +
+        "/chat",
+      {
+        method: "put",
+        headers: { "Content-Type": "text/plain; charset=UTF-8" },
+        body: this.currentMessage
+      }
+    )
       .then(res => res.json())
       .then(chat => {
         this.updateChat(chat);
@@ -151,7 +166,7 @@ export default class Room extends Vue {
   }
 
   joinRoom(): string {
-    return "theroom"
+    return "theroom";
     // const roomUrlPrefix = "#room/";
     // if (
     //   window.location.hash &&
@@ -190,26 +205,14 @@ export default class Room extends Vue {
   }
 
   updateRoom() {
-    fetch(this.serverBasePath +"/rooms/" + this.room)
+    fetch(this.serverBasePath + "/rooms/" + this.room)
       .then(res => res.json())
-      .then(room => {
-        this.updateChat(room.chat);
-
-        this.showPic(this.username, room.users[this.username]); // show own image first
-
-        const images = this.usersCamContainerElement().childNodes;
-        images.forEach((image: any) => {
-          if (room.users[image.id]) {
-            this.showPic(image.id, room.users[image.id].imageData);
-            delete room.users[image.id];
-          } else {
-            image.outerHTML = ""; // remove element
-          }
-        });
-
-        for (const user in room.users) {
-          this.showPic(user, room.users[user].imageData);
+      .then(newRoom => {
+        const ret = [];
+        for (const newUsername in newRoom.users) {
+          ret.push(newRoom.users[newUsername]);
         }
+        this.users = ret;
       });
   }
 
@@ -238,7 +241,7 @@ export default class Room extends Vue {
   }
 
   sendCurrentPic() {
-    fetch(this.serverBasePath +"/rooms/" + this.room + "/" + this.username, {
+    fetch(this.serverBasePath + "/rooms/" + this.room + "/" + this.username, {
       method: "put",
       body: JSON.stringify({ imageData: this.takePicture(this.username) }),
       headers: { "Content-Type": "application/json" }
@@ -256,7 +259,9 @@ export default class Room extends Vue {
     context.moveTo(canvas.width - 1, 0);
     context.lineTo(canvas.width - 1, videoElement.offsetHeight);
     context.stroke();
-    (document.getElementById(username)! as HTMLImageElement).src = canvas.toDataURL("image/jpeg");
+    (document.getElementById(
+      username
+    )! as HTMLImageElement).src = canvas.toDataURL("image/jpeg");
   }
 
   takePicture(username: string) {
@@ -272,13 +277,6 @@ export default class Room extends Vue {
       videoElement.offsetWidth,
       videoElement.offsetHeight
     );
-    context.font = "2em Arial";
-    context.textBaseline = "hanging";
-    context.shadowOffsetX = 0;
-    context.shadowOffsetY = 0;
-    context.shadowColor = "rgba(255,255,255,0.5)";
-    context.shadowBlur = 6;
-    context.fillText(username, 5, 5);
     const result = canvas.toDataURL("image/jpeg");
     if (result.length < 10) {
       throw "Camera did not provide image";
@@ -316,14 +314,5 @@ export default class Room extends Vue {
     width: 100%;
     height: 100%;
   }
-}
-</style>
-<style lang="postcss">
-.pic { /* has to be unscoped css because we add elements to dom by hand */
-  display: inline-block;
-  height: 200px;
-  vertical-align: bottom;
-  background-color: black;
-  @apply pr-1 pb-1 bg-very-dark
 }
 </style>
