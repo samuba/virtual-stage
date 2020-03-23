@@ -1,5 +1,5 @@
 <template>
-  <div style="background: #191413; color: white; margin: 0 0 0 0; height: 100%;">
+  <div class="bg-very-dark text-gray-100 min-h-screen">
     <div class="flex flex-wrap lg:flex-no-wrap">
       <div class="stream-container">
         <iframe
@@ -10,7 +10,7 @@
         ></iframe>
       </div>
 
-      <div class="w-full lg:text-base text-4xl">
+      <div class="w-full lg:text-base text-4xl ml-1">
         <div class="pl-4 py-2 bg-gray-900">
           {{room}}
           <button @click="showChat=!showChat" title="toggle chat" class="ml-3">
@@ -26,7 +26,7 @@
         <div class="flex-1 bg-gray-100" :class="{hide: !showChat}">
           <div class="overflow-auto p-2 text-black" id="chat-messages" style="height: 361px;">
             <div v-for="entry in chat" :key="entry.createdAt" :title="entry.createdAt" class="mt-1">
-              <img :src="pictureForUser(entry.authorName)" class="inline h-8" />
+              <img :src="pictureForUser(entry.authorName)" class="inline h-8 mr-1" />
               <span :style="'color:' + colorFromString(entry.authorName)">{{entry.authorName}}:</span>
               {{entry.message}}
             </div>
@@ -55,8 +55,7 @@
       autoplay
       height="200"
       preload="auto"
-      class="pic"
-      style="opacity: 0; position: absolute; height:200px;"
+      class="pic opacity-0 fixed"
     ></video>
   </div>
 </template>
@@ -325,6 +324,6 @@ export default class Room extends Vue {
   height: 200px;
   vertical-align: bottom;
   background-color: black;
-  @apply pr-1 pb-1
+  @apply pr-1 pb-1 bg-very-dark
 }
 </style>

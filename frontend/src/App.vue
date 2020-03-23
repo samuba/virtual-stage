@@ -13,6 +13,11 @@
 /* purgecss end ignore */
 @import "tailwindcss/utilities";
 
+html,
+body {
+  height: 100%;
+}
+
 [v-cloak] {
   display: none;
 }
