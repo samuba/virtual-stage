@@ -1,5 +1,5 @@
 <template>
-  <div style="background: #191413; color: white; margin: 0 0 0 0;">
+  <div style="background: #191413; color: white; margin: 0 0 0 0; height: 100%;">
     <div class="flex flex-wrap lg:flex-no-wrap">
       <div class="stream-container">
         <iframe
@@ -50,11 +50,12 @@
       </div>
     </div>
 
-    <div id="usersCamContainer"></div>
+    <div id="usersCamContainer" class="pt-1 pl-1"></div>
     <video
       autoplay
       height="200"
       preload="auto"
+      class="pic"
       style="opacity: 0; position: absolute; height:200px;"
     ></video>
   </div>
@@ -80,7 +81,6 @@ export default class Room extends Vue {
   chat: Chat[] = [] as any;
   showChat = true;
   lastMessageReadAt = "";
-  usersCamContainerElement = document.getElementById("usersCamContainer")!;
 
   get unreadMessages() {
     if (this.chat.length === 0) return false;
@@ -89,7 +89,7 @@ export default class Room extends Vue {
   }
 
   get serverBasePath() {
-    return window.location.hostname == "localhost" ? "" : "";
+    return window.location.hostname == "localhost" ? "http://localhost:8088" : "";
   }
 
   mounted() {
@@ -101,6 +101,10 @@ export default class Room extends Vue {
     this.sendCurrentPic();
     setInterval(() => this.sendCurrentPic(), 5000);
     setInterval(() => this.updateRoom(), 3000);
+  }
+  
+  usersCamContainerElement() {
+    return document.getElementById("usersCamContainer")!;
   }
 
   postMessage() {
@@ -194,7 +198,7 @@ export default class Room extends Vue {
 
         this.showPic(this.username, room.users[this.username]); // show own image first
 
-        const images = this.usersCamContainerElement.childNodes;
+        const images = this.usersCamContainerElement().childNodes;
         images.forEach((image: any) => {
           if (room.users[image.id]) {
             this.showPic(image.id, room.users[image.id].imageData);
@@ -221,7 +225,7 @@ export default class Room extends Vue {
       img = document.createElement("img");
       img.setAttribute("id", id);
       img.setAttribute("class", "pic");
-      this.usersCamContainerElement.appendChild(img);
+      this.usersCamContainerElement().appendChild(img);
     }
     img.src = imageData;
   }
@@ -289,14 +293,6 @@ export default class Room extends Vue {
   display: none;
 }
 
-.pic {
-  display: inline-block;
-  margin: 1px 1px 1px 1px;
-  height: 200px;
-  vertical-align: bottom;
-  background-color: black;
-}
-
 .stream-container iframe {
   width: 784px;
   height: 441px;
@@ -321,5 +317,14 @@ export default class Room extends Vue {
     width: 100%;
     height: 100%;
   }
+}
+</style>
+<style lang="postcss">
+.pic { /* has to be unscoped css because we add elements to dom by hand */
+  display: inline-block;
+  height: 200px;
+  vertical-align: bottom;
+  background-color: black;
+  @apply pr-1 pb-1
 }
 </style>

@@ -9,7 +9,7 @@
             "request": "launch",
             "name": "Launch Program",
             "env": {
-                "PORT": "8080",
+                "PORT": "8088",
             },
             "skipFiles": [
                 "<node_internals>/**"
