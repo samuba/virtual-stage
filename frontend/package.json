@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "yarn install && vue-cli-service build",
-    "cleanup": "mv ./dist ../dist && rm -rf ./* && ls -lah",
+    "cleanup": "mv ./dist ../dist && rm -rf ./* && mv ../dist ./dist && ls -lah",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
