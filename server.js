@@ -4,13 +4,15 @@ const bodyParser = require('body-parser')
 const compression = require('compression');
 const cors = require('cors')
 
+const frontendDir = "frontend/dist"
+
 app.use(compression())
 app.use(bodyParser.json())
 app.use(bodyParser.raw())
 app.use(bodyParser.text())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cors());
-app.use(express.static("public"));
+app.use(express.static(frontendDir));
 
 const rooms = {
   testRoom: {
@@ -22,7 +24,7 @@ const rooms = {
 };
 
 app.get("/", (request, response) => {
-  response.sendFile(__dirname + "/frontend/index.html"); 
+  response.sendFile(__dirname + "/" + frontendDir + "/index.html"); 
 });
 
 app.get("/rooms", (request, response) => {

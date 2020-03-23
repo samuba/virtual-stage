@@ -89,7 +89,7 @@ export default class Room extends Vue {
   }
 
   get serverBasePath() {
-    return window.location.hostname == "localhost" ? "http://localhost:8081" : "";
+    return window.location.hostname == "localhost" ? "" : "";
   }
 
   mounted() {
@@ -148,8 +148,8 @@ export default class Room extends Vue {
   }
 
   joinRoom(): string {
-    const roomUrlPrefix = "#room/";
-    return "";
+    return "theroom"
+    // const roomUrlPrefix = "#room/";
     // if (
     //   window.location.hash &&
     //   window.location.hash.startsWith(roomUrlPrefix)
