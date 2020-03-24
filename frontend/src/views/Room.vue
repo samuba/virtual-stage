@@ -243,7 +243,7 @@ export default class Room extends Vue {
   sendCurrentPic() {
     fetch(this.serverBasePath + "/rooms/" + this.room + "/" + this.username, {
       method: "put",
-      body: JSON.stringify({ imageData: this.takePicture(this.username) }),
+      body: JSON.stringify({ imageData: this.takePicture() }),
       headers: { "Content-Type": "application/json" }
     });
   }
@@ -264,7 +264,7 @@ export default class Room extends Vue {
     )! as HTMLImageElement).src = canvas.toDataURL("image/jpeg");
   }
 
-  takePicture(username: string) {
+  takePicture() {
     const videoElement = this.$el.querySelector("video")!;
     const canvas = document.createElement("canvas");
     canvas.width = videoElement.offsetWidth;

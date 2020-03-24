@@ -20,15 +20,14 @@ import { Component, Vue, Prop } from "vue-property-decorator";
 
 @Component
 export default class AudienceMember extends Vue {
-  @Prop()
-  name = "";
+  @Prop({ required: true })
+  name!: string
 
-  @Prop()
-  imageData = "";
+  @Prop({default: ""})
+  imageData!: string;
 
   get hasImage() {
-    console.log(this.imageData.length)
-    return this.imageData.length > 5000;
+    return this.imageData.length > 50000;
   }
 }
 </script>
